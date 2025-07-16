@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: data-handler-api
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/data_handler
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+server:
+  port: 8081
+
+jwt:
+  signerKey: "um1aNKdnGVCRbwCKggrANWRvogbh8GrDToUEz1RvesgClxJ6vsERuDnpNeNRz4Yd"
+  valid-duration: 3600 #in second
+  refreshable-duration: 360000 #in second
