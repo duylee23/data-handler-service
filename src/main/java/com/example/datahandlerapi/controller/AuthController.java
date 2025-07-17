@@ -38,7 +38,6 @@ public class AuthController {
                     .findFirst()
                     .map(GrantedAuthority::getAuthority)
                     .orElse("USER");
-            // (Tùy chọn) Bỏ tiền tố "ROLE_" nếu có
             role = role.startsWith("ROLE_") ? role.substring(5) : role;
 
             System.out.println("✅ LOGIN SUCCESS: " + user.getUsername() + "✅ ROLE " + role);
