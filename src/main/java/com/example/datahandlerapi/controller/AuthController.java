@@ -5,6 +5,7 @@ import com.example.datahandlerapi.dto.response.AuthResponse;
 import com.example.datahandlerapi.service.AuthService;
 import com.example.datahandlerapi.util.JwtUtil;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Setter
 public class AuthController {
-    private final AuthService authService;
     private final AuthenticationManager authManager;
     private final JwtUtil jwtUtil;
 

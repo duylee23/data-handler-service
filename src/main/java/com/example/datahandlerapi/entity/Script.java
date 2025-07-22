@@ -16,13 +16,12 @@ public class Script {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
     private String description;
 
-    private String destination;
-
-    private String groupType;
+    private String scriptPath;
 
     private String createdBy;
 
@@ -32,4 +31,7 @@ public class Script {
 
     private LocalDateTime updatedTime;
 
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
 }
