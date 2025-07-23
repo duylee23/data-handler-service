@@ -1,6 +1,5 @@
 package com.example.datahandlerapi.dto;
 
-import com.example.datahandlerapi.entity.Group;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;

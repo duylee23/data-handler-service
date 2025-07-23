@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.List;
 public class ProjectController {
 
     ProjectService projectService;
-    ProjectMapper projectMapper;
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<ProjectDTO>> createProject(@RequestBody ProjectDTO dto) {
@@ -37,9 +37,16 @@ public class ProjectController {
         );
     }
 
-    @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects() {
-        return ResponseEntity.ok(projectService.getAllProjects());
+    @GetMapping("/list")
+    public ResponseEntity<ApiResponse<List<Project>>> getAllProjects() {
+        List<Project> projectList = this.projectService.getAllProjects();
+        return ResponseEntity.ok(
+                ApiResponse.<List<Project>>builder()
+                        .status("success")
+                        .message("Get all projects")
+                        .data(projectList)
+                        .build()
+        );
     }
 
     @GetMapping("/{id}")
@@ -58,4 +65,6 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
 
     }
+
+
 }

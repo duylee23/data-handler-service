@@ -3,8 +3,10 @@ package com.example.datahandlerapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,8 @@ public class Group {
     private String groupName;
     private String description;
     private String createdBy;
-    private Time createdAt;
+    @CreationTimestamp
+    Timestamp createdAt;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
