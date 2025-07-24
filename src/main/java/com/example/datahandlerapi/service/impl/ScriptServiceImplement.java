@@ -1,36 +1,40 @@
 package com.example.datahandlerapi.service.impl;
 
 import com.example.datahandlerapi.dto.ScriptDTO;
-import com.example.datahandlerapi.dto.request.ScriptRequest;
-import com.example.datahandlerapi.entity.Group;
 import com.example.datahandlerapi.entity.Script;
 import com.example.datahandlerapi.mapper.ScriptMapper;
-import com.example.datahandlerapi.repository.GroupRepository;
 import com.example.datahandlerapi.repository.ScriptRepository;
 import com.example.datahandlerapi.service.ScriptService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class ScriptServiceImplement implements ScriptService {
 
     static String UPLOAD_DIR = "/data/scripts";
     ScriptRepository scriptRepository;
-    GroupRepository groupRepository;
     ScriptMapper scriptMapper;
 
 
     @Override
-    public ScriptDTO uploadScript(MultipartFile file, ScriptRequest requestDTO, String createdBy) {
+    @Transactional
+    public ScriptDTO uploadScript(MultipartFile file, ScriptDTO dto) {
         if(file.isEmpty()) throw new IllegalArgumentException("File is empty");
         try{
             Path uploadPath = Paths.get(UPLOAD_DIR);
@@ -40,21 +44,54 @@ public class ScriptServiceImplement implements ScriptService {
             Path destinationPath = uploadPath.resolve(fileName);
             Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
-            Group group = this.groupRepository.findGroupByGroupName(requestDTO.getGroupName())
-                    .orElseThrow(() -> new RuntimeException("Group not found!"));
-
-            Script script = Script.builder()
-                    .name(requestDTO.getName())
-                    .description(requestDTO.getDescription())
-                    .scriptPath(destinationPath.toString())
-                    .createdBy(createdBy)
-                    .group(group)
-                    .build();
-
+            Script script = this.scriptMapper.toEntity(dto);
+            script.setCreatedTime(LocalDateTime.now());
+            script.setScriptPath(destinationPath.toString());
             scriptRepository.save(script);
             return this.scriptMapper.toDTO(script);
         } catch (IOException e){
             throw new RuntimeException("Failed to save file: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<ScriptDTO> getScriptList() {
+        List<Script> scripts = this.scriptRepository.findAll();
+        return scripts.stream().map(this.scriptMapper::toDTO).toList();
+    }
+
+    @Override
+    public void deleteScript(Long id) {
+        try{
+            Script script = this.scriptRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Script not found with ID " + id));
+            String scriptPath = script.getScriptPath();
+            if(scriptPath != null && !scriptPath.isEmpty()) {
+                Path filePath = Paths.get(scriptPath);
+                if(Files.exists(filePath)){
+                    Files.delete(filePath);
+                }
+            }else {
+                log.warn("File not found: {}", scriptPath);
+            }
+            this.scriptRepository.delete(script);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete script file: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> getScriptDropdownData() {
+        List<Script> scripts = this.scriptRepository.findAll();
+
+        return scripts.stream()
+                .filter(script -> script.getGroup() == null)
+                .map(script -> {
+                    Map<String, Object> mapItem = new HashMap<>();
+                    mapItem.put("id", script.getId());
+                    mapItem.put("name", script.getName());
+                    return mapItem;
+                })
+                .toList();
     }
 }

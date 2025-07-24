@@ -20,5 +20,6 @@ public class ScriptDTO {
     String updatedBy;
     LocalDateTime createdTime;
     LocalDateTime updatedTime;
-    Long groupId; // foreign key
+    Long groupId;
+    Integer execOrder;
 }

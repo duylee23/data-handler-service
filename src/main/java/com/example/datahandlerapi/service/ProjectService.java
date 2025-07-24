@@ -4,6 +4,7 @@ import com.example.datahandlerapi.dto.ProjectDTO;
 import com.example.datahandlerapi.entity.Project;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProjectService {
     ProjectDTO createProject(ProjectDTO dto);
@@ -11,4 +12,5 @@ public interface ProjectService {
     Project getProjectById(Long id);
     Project updateProject(Long id, Project project);
     void deleteProject(Long id);
+    List<Map<String, Object>> getProjectDropdownData();
 }

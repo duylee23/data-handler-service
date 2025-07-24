@@ -1,11 +1,11 @@
 package com.example.datahandlerapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +29,11 @@ public class Group {
     Timestamp createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = "project_id")
     Project project;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<Script> script = new ArrayList<>();
+    @JsonBackReference
+    private List<Script> scripts = new ArrayList<>();
 
 }

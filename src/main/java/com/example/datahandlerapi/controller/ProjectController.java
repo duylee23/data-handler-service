@@ -4,17 +4,18 @@ package com.example.datahandlerapi.controller;
 import com.example.datahandlerapi.dto.ProjectDTO;
 import com.example.datahandlerapi.dto.response.ApiResponse;
 import com.example.datahandlerapi.entity.Project;
-import com.example.datahandlerapi.mapper.ProjectMapper;
 import com.example.datahandlerapi.service.ProjectService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/project")
@@ -49,22 +50,31 @@ public class ProjectController {
         );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
-        return ResponseEntity.ok(projectService.getProjectById(id));
+    @GetMapping("/dropdown")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getAllProjectDropdown() {
+        List<Map<String, Object>> result = this.projectService.getProjectDropdownData();
+        return ResponseEntity.ok(
+                ApiResponse.<List<Map<String, Object>>>builder()
+                        .status("success")
+                        .message("Get project dropdown successfully")
+                        .data(result)
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteProject(@PathVariable Long id) {
+        projectService.deleteProject(id);
+        return ResponseEntity.ok(
+                ApiResponse.<Void>builder()
+                        .status("success")
+                        .message("Delete project successfully!")
+                        .build()
+        );
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project project) {
         return ResponseEntity.ok(projectService.updateProject(id, project));
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
-        projectService.deleteProject(id);
-        return ResponseEntity.noContent().build();
-
-    }
-
-
 }

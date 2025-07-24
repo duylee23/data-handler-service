@@ -11,7 +11,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
@@ -54,5 +56,16 @@ public class ProjectServiceImplement implements ProjectService {
     @Override
     public void deleteProject(Long id) {
         projectRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Map<String, Object>> getProjectDropdownData() {
+        List<Project> projects = this.projectRepository.findAll();
+        return projects.stream().map(project -> {
+            Map<String, Object> mapItem = new HashMap<>();
+            mapItem.put("id", project.getId());
+            mapItem.put("name", project.getProjectName());
+            return mapItem;
+        }).toList();
     }
 }

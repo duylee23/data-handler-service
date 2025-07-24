@@ -3,6 +3,7 @@ package com.example.datahandlerapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,4 +35,6 @@ public class Script {
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
+
+    private Integer execOrder;
 }
