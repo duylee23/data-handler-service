@@ -5,6 +5,7 @@ import com.example.datahandlerapi.dto.response.ApiResponse;
 import com.example.datahandlerapi.entity.User;
 import com.example.datahandlerapi.repository.UserRepository;
 import com.example.datahandlerapi.service.UserService;
+import com.example.datahandlerapi.util.ResponseUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
@@ -32,34 +33,18 @@ public class UserController {
     @PostMapping("/add")
     private ResponseEntity<ApiResponse<UserDTO>> addNewUser(@RequestBody UserDTO dto) {
         UserDTO createdUser = this.userService.createUser(dto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<UserDTO>builder()
-                        .status("success")
-                        .message("User created successfully")
-                        .data(createdUser)
-                        .build());
+        return ResponseUtil.created("User created successfully", createdUser);
     }
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> listUsers() {
+    public ResponseEntity<ApiResponse<List<UserDTO>>> listUsers() {
         List<UserDTO> list = this.userService.getAllUsers();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(
-                ApiResponse.<List<UserDTO>>builder()
-                        .status("success")
-                        .message("User list")
-                        .data(list)
-                        .build()
-        );
+        return ResponseUtil.ok("User list retrieved successfully", list);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         this.userService.deleteUser(id);
-        return ResponseEntity.ok(
-          ApiResponse.<Void>builder()
-                  .status("success")
-                  .message("Delete user successfully!")
-                  .build()
-        );
+        return ResponseUtil.ok("User deleted successfully");
     }
 }

@@ -21,5 +21,6 @@ public class ScriptDTO {
     LocalDateTime createdTime;
     LocalDateTime updatedTime;
     Long groupId;
+    String groupName;
     Integer execOrder;
 }

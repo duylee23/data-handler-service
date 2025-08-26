@@ -8,9 +8,9 @@ import java.util.Map;
 
 public interface ProjectService {
     ProjectDTO createProject(ProjectDTO dto);
-    List<Project> getAllProjects();
+    List<ProjectDTO> getAllProjects();
     Project getProjectById(Long id);
-    Project updateProject(Long id, Project project);
+//    ProjectDTO updateProject(Long id, ProjectDTO project);
     void deleteProject(Long id);
     List<Map<String, Object>> getProjectDropdownData();
 }

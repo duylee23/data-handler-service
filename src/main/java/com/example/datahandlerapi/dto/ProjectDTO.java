@@ -1,11 +1,9 @@
 package com.example.datahandlerapi.dto;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-
 import java.sql.Timestamp;
 import java.util.List;
 

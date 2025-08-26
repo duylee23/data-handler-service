@@ -2,6 +2,8 @@ package com.example.datahandlerapi.controller;
 
 import com.example.datahandlerapi.dto.request.LoginRequest;
 import com.example.datahandlerapi.dto.response.AuthResponse;
+import com.example.datahandlerapi.dto.response.ApiResponse;
+import com.example.datahandlerapi.util.ResponseUtil;
 import com.example.datahandlerapi.service.AuthService;
 import com.example.datahandlerapi.util.JwtUtil;
 import lombok.AllArgsConstructor;
@@ -26,7 +28,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody LoginRequest request) {
         try {
             Authentication auth = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -42,13 +44,14 @@ public class AuthController {
 
             System.out.println("✅ LOGIN SUCCESS: " + user.getUsername() + "✅ ROLE " + role);
 
-            return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), role));
+            AuthResponse authResponse = new AuthResponse(token, user.getUsername(), role);
+            return ResponseUtil.ok("Login successful", authResponse);
         } catch (BadCredentialsException e) {
             System.out.println("❌ LOGIN FAILED: bad credentials");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseUtil.unauthorized("Invalid credentials", "Authentication failed");
         } catch (Exception e) {
             System.out.println("❌ LOGIN ERROR: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseUtil.internalServerError("Internal server error", e.getMessage());
         }
     }
 }

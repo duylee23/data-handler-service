@@ -15,10 +15,12 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GroupDTO {
     Long id;
-    String groupName;
-    String groupDescription;
+    String name;
+    String description;
     String createdBy;
     Timestamp createdAt;
     List<String> scriptListName;
     List<Map<String,Object>> scripts;
+    Long projectId;
+    String projectName;
 }

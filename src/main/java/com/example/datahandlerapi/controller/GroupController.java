@@ -20,41 +20,30 @@ import java.util.List;
 @Slf4j
 @Transactional
 public class GroupController {
+
     GroupService groupService;
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<GroupDTO>> createGroup(@RequestBody GroupDTO dto) {
-        GroupDTO createdGroup = this.groupService.createGroup(dto);
-        return ResponseEntity.ok(
-          ApiResponse.<GroupDTO>builder()
-                  .status("success")
-                  .message("Created group successfully! ")
-                  .data(createdGroup)
-                  .build()
-        );
+        GroupDTO createdGroup = groupService.createGroup(dto);
+        return ResponseEntity.ok(ApiResponse.success("Group created successfully", createdGroup));
     }
 
     @GetMapping("/list")
     public ResponseEntity<ApiResponse<List<GroupDTO>>> getGroupList() {
-        List<GroupDTO> groupList = this.groupService.getListGroup();
-        return ResponseEntity.ok(
-                ApiResponse.<List<GroupDTO>>builder()
-                        .status("success")
-                        .message("Group list! ")
-                        .data(groupList)
-                        .build()
-        );
+        List<GroupDTO> groupList = groupService.getListGroup();
+        return ResponseEntity.ok(ApiResponse.success("Group list retrieved successfully", groupList));
+    }
+
+    @GetMapping("/types")
+    public ResponseEntity<ApiResponse<List<String>>> getGroupTypes() {
+        List<String> groupTypes = groupService.getGroupTypes();
+        return ResponseEntity.ok(ApiResponse.success("Group type retrieved successfully", groupTypes));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteGroup(@PathVariable Long id) {
-        this.groupService.deleteGroup(id);
-        return ResponseEntity.ok(
-                ApiResponse.<Void>builder()
-                        .status("success")
-                        .message("Delete group successfully")
-                        .build()
-        );
+        groupService.deleteGroup(id);
+        return ResponseEntity.ok(ApiResponse.success("Group deleted successfully"));
     }
-
 }

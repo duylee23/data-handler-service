@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/project")
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ProjectController {
 
@@ -28,53 +28,34 @@ public class ProjectController {
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<ProjectDTO>> createProject(@RequestBody ProjectDTO dto) {
-        ProjectDTO createdProject = this.projectService.createProject(dto);
-        return ResponseEntity.ok(
-                ApiResponse.<ProjectDTO>builder()
-                        .status("success")
-                        .message("Create new project successfully!")
-                        .data(createdProject)
-                        .build()
-        );
+        ProjectDTO created = projectService.createProject(dto);
+        return ResponseEntity.ok(ApiResponse.success("Project created successfully", created));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ApiResponse<List<Project>>> getAllProjects() {
-        List<Project> projectList = this.projectService.getAllProjects();
-        return ResponseEntity.ok(
-                ApiResponse.<List<Project>>builder()
-                        .status("success")
-                        .message("Get all projects")
-                        .data(projectList)
-                        .build()
-        );
+    public ResponseEntity<ApiResponse<List<ProjectDTO>>> getAllProjects() {
+        List<ProjectDTO> items = projectService.getAllProjects();
+        return ResponseEntity.ok(ApiResponse.success("Project list retrieved successfully", items));
     }
 
     @GetMapping("/dropdown")
     public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getAllProjectDropdown() {
-        List<Map<String, Object>> result = this.projectService.getProjectDropdownData();
-        return ResponseEntity.ok(
-                ApiResponse.<List<Map<String, Object>>>builder()
-                        .status("success")
-                        .message("Get project dropdown successfully")
-                        .data(result)
-                        .build()
-        );
+        List<Map<String, Object>> result = projectService.getProjectDropdownData();
+        return ResponseEntity.ok(ApiResponse.success("Project dropdown data retrieved successfully", result));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
-        return ResponseEntity.ok(
-                ApiResponse.<Void>builder()
-                        .status("success")
-                        .message("Delete project successfully!")
-                        .build()
-        );
+        return ResponseEntity.ok(ApiResponse.success("Project deleted successfully"));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project project) {
-        return ResponseEntity.ok(projectService.updateProject(id, project));
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<ApiResponse<ProjectDTO>> updateProject(
+//            @PathVariable Long id,
+//            @RequestBody ProjectDTO dto
+//    ) {
+//        ProjectDTO updated = projectService.updateProject(id, dto);
+//        return ResponseEntity.ok(ApiResponse.success("Project updated successfully", updated));
+//    }
 }

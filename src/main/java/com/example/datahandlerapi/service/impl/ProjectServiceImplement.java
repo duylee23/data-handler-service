@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +35,11 @@ public class ProjectServiceImplement implements ProjectService {
     }
 
     @Override
-    public List<Project> getAllProjects() {
-        return projectRepository.findAll();
+    public List<ProjectDTO> getAllProjects() {
+        List<Project> projects = projectRepository.findAll();
+        return projects.stream()
+                .map(this.projectMapper::toDTO) // hoặc viết tay hàm toDTO như trên
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -44,14 +48,15 @@ public class ProjectServiceImplement implements ProjectService {
                 .orElseThrow(() -> new NoSuchElementException("Project not found with id: " + id));
     }
 
-    @Override
-    public Project updateProject(Long id, Project updatedProject) {
-        Project existing = getProjectById(id);
-        existing.setProjectName(updatedProject.getProjectName());
-        existing.setDescription(updatedProject.getDescription());
-        existing.setCreatedBy(updatedProject.getCreatedBy());
-        return projectRepository.save(existing);
-    }
+//    @Override
+//    public ProjectDTO updateProject(Long id, ProjectDTO updatedProject) {
+//        Project existing = getProjectById(id);
+//        existing.setProjectName(updatedProject.getProjectName());
+//        existing.setDescription(updatedProject.getDescription());
+//        existing.setCreatedBy(updatedProject.getCreatedBy());
+//        Project result = projectRepository.save(existing);
+//        return
+//    }
 
     @Override
     public void deleteProject(Long id) {
