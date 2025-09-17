@@ -27,6 +27,7 @@ public class ScriptMapper {
                 .updatedTime(script.getUpdatedTime())
                 .groupId(script.getGroup() != null ? script.getGroup().getId() : null)
                 .groupName(script.getGroup() != null ? script.getGroup().getGroupName() : null)
+                .execOrder(script.getExecOrder())
                 .build();
     }
 

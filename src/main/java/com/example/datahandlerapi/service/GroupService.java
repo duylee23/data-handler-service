@@ -10,4 +10,6 @@ public interface GroupService {
     List<GroupDTO> getListGroup();
     void deleteGroup(Long id);
     List<String> getGroupTypes();
+    GroupDTO editGroup(GroupDTO dto, Long id);
+
 }

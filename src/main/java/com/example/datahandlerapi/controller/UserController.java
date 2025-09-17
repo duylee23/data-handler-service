@@ -47,4 +47,10 @@ public class UserController {
         this.userService.deleteUser(id);
         return ResponseUtil.ok("User deleted successfully");
     }
+
+    @PostMapping("/edit")
+    private ResponseEntity<ApiResponse<UserDTO>> editUser(@RequestBody UserDTO dto) {
+        UserDTO editedUser = this.userService.editUser(dto);
+        return ResponseUtil.created("User updated successfully", editedUser);
+    }
 }

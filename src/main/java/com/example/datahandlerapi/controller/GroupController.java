@@ -29,6 +29,12 @@ public class GroupController {
         return ResponseEntity.ok(ApiResponse.success("Group created successfully", createdGroup));
     }
 
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<ApiResponse<GroupDTO>> editGroup(@RequestBody GroupDTO dto, @PathVariable Long id) {
+        GroupDTO editedGroup = groupService.editGroup(dto, id);
+        return ResponseEntity.ok(ApiResponse.success("Group edited successfully", editedGroup));
+    }
+
     @GetMapping("/list")
     public ResponseEntity<ApiResponse<List<GroupDTO>>> getGroupList() {
         List<GroupDTO> groupList = groupService.getListGroup();

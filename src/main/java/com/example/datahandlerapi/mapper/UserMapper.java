@@ -24,4 +24,12 @@ public class UserMapper {
                 .role(dto.getRole().toUpperCase())
                 .build();
     }
+
+    public User toEntity(UserDTO dto){
+        return User.builder()
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .role(dto.getRole().toUpperCase())
+                .build();
+    }
 }

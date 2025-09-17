@@ -3,6 +3,8 @@ package com.example.datahandlerapi.exception;
 import com.example.datahandlerapi.dto.response.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,6 +21,7 @@ import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -29,11 +32,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
         log.error("Invalid argument: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error("Invalid request", ex.getMessage()));
     }
+
+    // (tuỳ chọn) bắt thêm các lỗi khác để chắc chắn luôn có body
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ApiResponse<Void>> handleAny(Exception ex) {
+//        log.error("Unhandled error", ex);
+//        return ResponseEntity
+//                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body(ApiResponse.error("Server error", "Please contact support"));
+//    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(AuthenticationException ex) {

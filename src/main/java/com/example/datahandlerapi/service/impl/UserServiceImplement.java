@@ -27,6 +27,7 @@ public class UserServiceImplement implements UserService {
 
 
     @Override
+    @Transactional
     public UserDTO createUser(UserDTO dto) {
         if(this.userRepository.existsByUsername(dto.getUsername())){
             throw new IllegalArgumentException("Username already exist!");
@@ -46,10 +47,31 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         if(!this.userRepository.existsById(id)){
             throw new NoSuchElementException("user not found");
         }
         this.userRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public UserDTO editUser(UserDTO userDTO) {
+        User existingUser = this.userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not exists!") );
+
+        if (userDTO.getUsername() != null) {
+            existingUser.setUsername(userDTO.getUsername());
+        }
+        if (userDTO.getEmail() != null) {
+            existingUser.setEmail(userDTO.getEmail());
+        }
+        if (userDTO.getRole() != null) {
+            existingUser.setRole(userDTO.getRole());
+        }
+        User updatedUser = userRepository.save(existingUser);
+        return userMapper.toDTO(updatedUser);
+    }
+
 }

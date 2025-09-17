@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +19,7 @@ public class GroupDTO {
     String createdBy;
     Timestamp createdAt;
     List<String> scriptListName;
-    List<Map<String,Object>> scripts;
+    List<ScriptOrderDTO> scripts;
     Long projectId;
     String projectName;
 }
